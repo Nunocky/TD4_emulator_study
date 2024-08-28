@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,6 +37,7 @@ fun TimerScreen(
     val regB by viewModel.regB.collectAsState()
     val cf by viewModel.cf.collectAsState()
     val programCodes by viewModel.programCodes.collectAsState()
+    val sleepMs by viewModel.sleep_ms.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -69,30 +71,42 @@ fun TimerScreen(
             })
         }
 
-        // ステップ実行ボタン
-        Row() {
+        Column {
+            Slider(
+                value = sleepMs.toFloat(),
+                valueRange = 100f..1000f,
+                onValueChange = {
+                    viewModel.setSleepMs(it.toLong())
+                },
+            )
+
             if (isRunning) {
+                // 自動実行中
                 Button(onClick = {
                     viewModel.stop()
                 }) {
                     Text("Stop")
                 }
             } else {
-                Button(onClick = {
-                    viewModel.reset()
-                }) {
-                    Text("Reset")
-                }
-                Button(onClick = {
-                    // ステップ実行
-                    viewModel.step()
-                }) {
-                    Text("Step")
-                }
-                Button(onClick = {
-                    viewModel.run()
-                }) {
-                    Text("Run")
+                // ステップ実行
+                // スライダー min=100, max=1000, step=100
+                Row() {
+                    Button(onClick = {
+                        viewModel.reset()
+                    }) {
+                        Text("Reset")
+                    }
+                    Button(onClick = {
+                        // ステップ実行
+                        viewModel.step()
+                    }) {
+                        Text("Step")
+                    }
+                    Button(onClick = {
+                        viewModel.run()
+                    }) {
+                        Text("Run")
+                    }
                 }
             }
         }

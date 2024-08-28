@@ -84,6 +84,9 @@ class TimerScreenViewModel : ViewModel() {
     private val _cf = MutableStateFlow(false)
     val cf = _cf.asStateFlow()
 
+    private var _sleep_ms = MutableStateFlow(500L)
+    var sleep_ms = _sleep_ms.asStateFlow()
+
     fun reset() {
         evaBoard.reset()
         updateBoardState()
@@ -109,13 +112,17 @@ class TimerScreenViewModel : ViewModel() {
             _isRunning.value = true
             while (_isRunning.value) {
                 step()
-                delay(100)
+                delay(_sleep_ms.value)
             }
         }
     }
 
     fun stop() {
         _isRunning.value = false
+    }
+
+    fun setSleepMs(value: Long) {
+        _sleep_ms.value = value
     }
 
     fun toggleSwitch0() {
