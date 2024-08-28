@@ -49,6 +49,7 @@ class TD4 {
     fun reset() {
         address = 0
         data = 0
+        led = 0
         regA = 0
         regB = 0
         cf = false
